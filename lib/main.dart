@@ -205,33 +205,9 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               addFlag = !addFlag;
             });
-            // setState(() {
-            //   score['team1'].add({
-            //     'playerName': '',
-            //     'points': 0,
-            //     '3pm': 0,
-            //     '2pm': 0,
-            //     '3pa': 0,
-            //     '2pa': 0,
-            //     'fgm': 0,
-            //     'fga': 0,
-            //   });
-            // });
-            // setState(() {
-            //   score['team2'].add({
-            //     'playerName': '',
-            //     'points': 0,
-            //     '3pm': 0,
-            //     '2pm': 0,
-            //     '3pa': 0,
-            //     '2pa': 0,
-            //     'fgm': 0,
-            //     'fga': 0,
-            //   });
-            // });
           },
           child: Icon(
-            addFlag ? Icons.category : Icons.add,
+            addFlag ? Icons.child_care : Icons.add,
             size: 35,
             color: addFlag ? Colors.white : Colors.black,
           ),
