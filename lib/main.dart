@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'player.dart';
 
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
 }
 
 class TeamsScore {
-  var teams;
+  dynamic teams;
   TeamsScore(this.teams);
 }
 
@@ -35,21 +37,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Map<String, List<Object>> teams = {
-  //   'team1': [
-  //     {
-  //       'playerName': 'Izba',
-  //       'points': 0,
-  //     },
-  //   ],
-  //   'team2': [
-  //     {
-  //       'playerName': 'Sawik',
-  //       'points': 0,
-  //     }
-  //   ],
-  // };
-  TeamsScore score = TeamsScore({
+  Map<String, List<Map<String, dynamic>>> score = {
     'team1': [
       {
         'playerName': '',
@@ -74,29 +62,13 @@ class _HomeScreenState extends State<HomeScreen> {
         'fga': 0,
       },
     ],
-  });
-  Map<String, int> teamsPoints = {
-    'team1': 0,
-    'team2': 0,
   };
-
-  void calculateScore() {
-    teamsPoints['team1'] = 0;
-    teamsPoints['team2'] = 0;
-    for (var score in score.teams['team1']) {
-      teamsPoints['team1'] += score['points'];
-    }
-    for (var score in score.teams['team2']) {
-      teamsPoints['team2'] += score['points'];
-    }
-  }
-
+  bool addFlag = false;
   @override
   Widget build(BuildContext context) {
     void addPoints(var val, int point) {
       setState(() {
         val['points'] += point;
-        calculateScore();
       });
     }
 
@@ -113,151 +85,110 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(15),
           child: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              teamsPoints['team1'].toString(),
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  ...score.values.map((el) {
+                    int points = 0;
+                    for (var score in el) {
+                      setState(() {
+                        points += score['points'];
+                      });
+                    }
+
+                    return Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            '$points',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
                             ),
-                            ...score.teams['team1'].map((val) {
-                              return Player(
-                                name: val['playerName'],
-                                playerScore: val['points'],
-                                threePM: val['3pm'],
-                                twoPM: val['2pm'],
-                                threePA: val['3pa'],
-                                twoPA: val['2pa'],
-                                minusTwoPointer: () {
-                                  addPoints(val, -2);
-                                  val['2pm']--;
-                                  val['2pa']--;
-                                },
-                                twoPointer: () {
-                                  addPoints(val, 2);
-                                  val['2pm']++;
+                          ),
+                          ...el.map((val) {
+                            return Player(
+                              name: val['playerName'],
+                              playerScore: val['points'],
+                              threePM: val['3pm'],
+                              twoPM: val['2pm'],
+                              threePA: val['3pa'],
+                              twoPA: val['2pa'],
+                              minusTwoPointer: () {
+                                addPoints(val, -2);
+                                val['2pm']--;
+                                val['2pa']--;
+                              },
+                              twoPointer: () {
+                                addPoints(val, 2);
+                                val['2pm']++;
+                                val['2pa']++;
+                              },
+                              twoPointerAttempt: () {
+                                setState(() {
                                   val['2pa']++;
-                                },
-                                twoPointerAttempt: () {
-                                  setState(() {
-                                    val['2pa']++;
-                                  });
-                                },
-                                minusTwoPointerAttempt: () {
-                                  setState(() {
-                                    val['2pa']--;
-                                  });
-                                },
-                                minusThreePointer: () {
-                                  addPoints(val, -3);
-                                  val['3pm']--;
-                                  val['3pa']--;
-                                },
-                                threePointer: () {
-                                  addPoints(val, 3);
-                                  val['3pm']++;
-                                  val['3pa']++;
-                                },
-                                threePointerAttempt: () {
-                                  setState(() {
-                                    val['3pa']++;
-                                  });
-                                },
-                                minusThreePointerAttempt: () {
-                                  setState(() {
-                                    val['3pa']--;
-                                  });
-                                },
-                                submit: (res) {
-                                  setState(() {
-                                    val['playerName'] = res;
-                                  });
-                                },
-                              );
-                            })
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              teamsPoints['team2'].toString(),
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            ...score.teams['team2'].map((val) {
-                              return Player(
-                                name: val['playerName'],
-                                playerScore: val['points'],
-                                threePM: val['3pm'],
-                                twoPM: val['2pm'],
-                                threePA: val['3pa'],
-                                twoPA: val['2pa'],
-                                minusTwoPointer: () {
-                                  addPoints(val, -2);
-                                  val['2pm']--;
+                                });
+                              },
+                              minusTwoPointerAttempt: () {
+                                setState(() {
                                   val['2pa']--;
-                                },
-                                twoPointer: () {
-                                  addPoints(val, 2);
-                                  val['2pm']++;
-                                  val['2pa']++;
-                                },
-                                twoPointerAttempt: () {
-                                  setState(() {
-                                    val['2pa']++;
-                                  });
-                                },
-                                minusTwoPointerAttempt: () {
-                                  setState(() {
-                                    val['2pa']--;
-                                  });
-                                },
-                                minusThreePointer: () {
-                                  addPoints(val, -3);
-                                  val['3pm']--;
-                                  val['3pa']--;
-                                },
-                                threePointer: () {
-                                  addPoints(val, 3);
-                                  val['3pm']++;
+                                });
+                              },
+                              minusThreePointer: () {
+                                addPoints(val, -3);
+                                val['3pm']--;
+                                val['3pa']--;
+                              },
+                              threePointer: () {
+                                addPoints(val, 3);
+                                val['3pm']++;
+                                val['3pa']++;
+                              },
+                              threePointerAttempt: () {
+                                setState(() {
                                   val['3pa']++;
-                                },
-                                threePointerAttempt: () {
-                                  setState(() {
-                                    val['3pa']++;
-                                  });
-                                },
-                                minusThreePointerAttempt: () {
-                                  setState(() {
-                                    val['3pa']--;
-                                  });
-                                },
-                                submit: (res) {
-                                  setState(() {
-                                    val['playerName'] = res;
-                                  });
-                                },
-                              );
-                            })
-                          ],
-                        ),
+                                });
+                              },
+                              minusThreePointerAttempt: () {
+                                setState(() {
+                                  val['3pa']--;
+                                });
+                              },
+                              submit: (res) {
+                                setState(() {
+                                  val['playerName'] = res;
+                                });
+                              },
+                            );
+                          }),
+                          addFlag
+                              ? OutlineButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      el.add({
+                                        'playerName': '',
+                                        'points': 0,
+                                        '3pm': 0,
+                                        '2pm': 0,
+                                        '3pa': 0,
+                                        '2pa': 0,
+                                        'fgm': 0,
+                                        'fga': 0,
+                                      });
+                                    });
+                                  },
+                                  icon: Icon(Icons.add),
+                                  label: Text('Dodaj'),
+                                )
+                              : SizedBox(
+                                  width: 1,
+                                ),
+                        ],
                       ),
-                    ],
-                  )
+                    );
+                  })
                 ],
               ),
             ),
@@ -269,35 +200,40 @@ class _HomeScreenState extends State<HomeScreen> {
           print('object');
         },
         child: FloatingActionButton(
+          backgroundColor: addFlag ? Colors.blueGrey : Colors.blueAccent,
           onPressed: () {
             setState(() {
-              score.teams['team1'].add({
-                'playerName': '',
-                'points': 0,
-                '3pm': 0,
-                '2pm': 0,
-                '3pa': 0,
-                '2pa': 0,
-                'fgm': 0,
-                'fga': 0,
-              });
+              addFlag = !addFlag;
             });
-            setState(() {
-              score.teams['team2'].add({
-                'playerName': '',
-                'points': 0,
-                '3pm': 0,
-                '2pm': 0,
-                '3pa': 0,
-                '2pa': 0,
-                'fgm': 0,
-                'fga': 0,
-              });
-            });
+            // setState(() {
+            //   score['team1'].add({
+            //     'playerName': '',
+            //     'points': 0,
+            //     '3pm': 0,
+            //     '2pm': 0,
+            //     '3pa': 0,
+            //     '2pa': 0,
+            //     'fgm': 0,
+            //     'fga': 0,
+            //   });
+            // });
+            // setState(() {
+            //   score['team2'].add({
+            //     'playerName': '',
+            //     'points': 0,
+            //     '3pm': 0,
+            //     '2pm': 0,
+            //     '3pa': 0,
+            //     '2pa': 0,
+            //     'fgm': 0,
+            //     'fga': 0,
+            //   });
+            // });
           },
           child: Icon(
-            Icons.add,
+            addFlag ? Icons.category : Icons.add,
             size: 35,
+            color: addFlag ? Colors.white : Colors.black,
           ),
         ),
       ),
