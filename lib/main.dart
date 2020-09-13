@@ -42,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'playerName': '',
         'points': 0,
+        'assist': 0,
+        'rebounds': 0,
         '3pm': 0,
         '2pm': 0,
         '3pa': 0,
@@ -54,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         'playerName': '',
         'points': 0,
+        'assist': 0,
+        'rebounds': 0,
         '3pm': 0,
         '2pm': 0,
         '3pa': 0,
@@ -66,9 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool addFlag = false;
   @override
   Widget build(BuildContext context) {
-    void addPoints(var val, int point) {
+    void addToPlayerStats(var val, String stat, int point) {
       setState(() {
-        val['points'] += point;
+        val[stat] += point;
       });
     }
 
@@ -76,7 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
-
           if (!currentFocus.hasPrimaryFocus) {
             currentFocus.unfocus();
           }
@@ -96,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         points += score['points'];
                       });
                     }
-
                     return Expanded(
                       flex: 1,
                       child: Column(
@@ -112,49 +114,55 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Player(
                               name: val['playerName'],
                               playerScore: val['points'],
+                              assists: val['assist'],
+                              rebounds: val['rebounds'],
                               threePM: val['3pm'],
                               twoPM: val['2pm'],
                               threePA: val['3pa'],
                               twoPA: val['2pa'],
                               minusTwoPointer: () {
-                                addPoints(val, -2);
-                                val['2pm']--;
-                                val['2pa']--;
+                                addToPlayerStats(val, 'points', -2);
+                                addToPlayerStats(val, '2pm', -1);
+                                addToPlayerStats(val, '2pa', -1);
                               },
                               twoPointer: () {
-                                addPoints(val, 2);
-                                val['2pm']++;
-                                val['2pa']++;
+                                addToPlayerStats(val, 'points', 2);
+                                addToPlayerStats(val, '2pm', 1);
+                                addToPlayerStats(val, '2pa', 1);
                               },
                               twoPointerAttempt: () {
-                                setState(() {
-                                  val['2pa']++;
-                                });
+                                addToPlayerStats(val, '2pa', 1);
                               },
                               minusTwoPointerAttempt: () {
-                                setState(() {
-                                  val['2pa']--;
-                                });
+                                addToPlayerStats(val, '2pa', -1);
                               },
                               minusThreePointer: () {
-                                addPoints(val, -3);
-                                val['3pm']--;
-                                val['3pa']--;
+                                addToPlayerStats(val, 'points', -3);
+                                addToPlayerStats(val, '3pm', -1);
+                                addToPlayerStats(val, '3pa', -1);
                               },
                               threePointer: () {
-                                addPoints(val, 3);
-                                val['3pm']++;
-                                val['3pa']++;
+                                addToPlayerStats(val, 'points', 3);
+                                addToPlayerStats(val, '3pm', 1);
+                                addToPlayerStats(val, '3pa', 1);
                               },
                               threePointerAttempt: () {
-                                setState(() {
-                                  val['3pa']++;
-                                });
+                                addToPlayerStats(val, '3pa', 1);
                               },
                               minusThreePointerAttempt: () {
-                                setState(() {
-                                  val['3pa']--;
-                                });
+                                addToPlayerStats(val, '3pa', -1);
+                              },
+                              addAssist: () {
+                                addToPlayerStats(val, 'assist', 1);
+                              },
+                              addRebound: () {
+                                addToPlayerStats(val, 'rebounds', 1);
+                              },
+                              removeAssist: () {
+                                addToPlayerStats(val, 'assist', -1);
+                              },
+                              removeRebound: () {
+                                addToPlayerStats(val, 'rebounds', -1);
                               },
                               submit: (res) {
                                 setState(() {
@@ -170,6 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       el.add({
                                         'playerName': '',
                                         'points': 0,
+                                        'assist': 0,
+                                        'rebounds': 0,
                                         '3pm': 0,
                                         '2pm': 0,
                                         '3pa': 0,

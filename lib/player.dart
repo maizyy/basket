@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class Player extends StatefulWidget {
   final String name;
   final int playerScore;
+  final int assists;
+  final int rebounds;
   final int threePM;
   final int twoPM;
   final int threePA;
@@ -15,6 +17,10 @@ class Player extends StatefulWidget {
   final Function minusThreePointer;
   final Function threePointerAttempt;
   final Function minusThreePointerAttempt;
+  final Function addAssist;
+  final Function removeAssist;
+  final Function addRebound;
+  final Function removeRebound;
   final Function submit;
 
   Player({
@@ -34,6 +40,12 @@ class Player extends StatefulWidget {
     this.threePointerAttempt,
     this.minusTwoPointerAttempt,
     this.minusThreePointerAttempt,
+    this.assists,
+    this.rebounds,
+    this.addAssist,
+    this.addRebound,
+    this.removeAssist,
+    this.removeRebound,
   }) : super(key: key);
 
   @override
@@ -89,7 +101,7 @@ class _PlayerState extends State<Player> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 25),
                               child: Text(
-                                widget.playerScore.toString(),
+                                'PTS: ${widget.playerScore} AST: ${widget.assists} REB: ${widget.rebounds}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -124,47 +136,68 @@ class _PlayerState extends State<Player> {
                           )
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(0.0),
-                              child: Container(
-                                child: Text('2'),
-                              ),
-                              onPressed: widget.twoPointer,
-                              onLongPress: widget.minusTwoPointer,
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: FlatButton(
-                                child: Text('2'),
-                                onPressed: widget.twoPointerAttempt,
-                                onLongPress: widget.minusTwoPointerAttempt,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
                               child: RaisedButton(
-                                child: Text('3'),
-                                onPressed: widget.threePointer,
-                                onLongPress: widget.minusThreePointer,
+                                padding: const EdgeInsets.all(0.0),
+                                child: Container(
+                                  child: Text('2'),
+                                ),
+                                onPressed: widget.twoPointer,
+                                onLongPress: widget.minusTwoPointer,
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: FlatButton(
-                                child: Text('3'),
-                                onPressed: widget.threePointerAttempt,
-                                onLongPress: widget.minusThreePointerAttempt,
+                            Expanded(
+                              child: Container(
+                                child: FlatButton(
+                                  child: Text('2'),
+                                  onPressed: widget.twoPointerAttempt,
+                                  onLongPress: widget.minusTwoPointerAttempt,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Container(
+                                child: RaisedButton(
+                                  child: Text('3'),
+                                  onPressed: widget.threePointer,
+                                  onLongPress: widget.minusThreePointer,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: FlatButton(
+                                  child: Text('3'),
+                                  onPressed: widget.threePointerAttempt,
+                                  onLongPress: widget.minusThreePointerAttempt,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: FlatButton(
+                                  child: Text('AST'),
+                                  onPressed: widget.addAssist,
+                                  onLongPress: widget.removeAssist,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: FlatButton(
+                                  child: Text('REB'),
+                                  onPressed: widget.addRebound,
+                                  onLongPress: widget.removeRebound,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
