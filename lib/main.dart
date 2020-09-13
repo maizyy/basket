@@ -200,18 +200,26 @@ class _HomeScreenState extends State<HomeScreen> {
           print('object');
         },
         child: FloatingActionButton(
-          backgroundColor: addFlag ? Colors.blueGrey : Colors.blueAccent,
-          onPressed: () {
-            setState(() {
-              addFlag = !addFlag;
-            });
-          },
-          child: Icon(
-            addFlag ? Icons.child_care : Icons.add,
-            size: 35,
-            color: addFlag ? Colors.white : Colors.black,
-          ),
-        ),
+            backgroundColor: !addFlag ? Colors.blueAccent : Colors.redAccent,
+            onPressed: () {
+              setState(() {
+                addFlag = !addFlag;
+              });
+            },
+            child: !addFlag
+                ? Icon(
+                    Icons.add,
+                    size: 35,
+                    color: Colors.white,
+                  )
+                : Transform.rotate(
+                    angle: pi / 4,
+                    child: Icon(
+                      Icons.add,
+                      size: 35,
+                      color: Colors.white,
+                    ),
+                  )),
       ),
     );
   }

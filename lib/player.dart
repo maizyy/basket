@@ -116,7 +116,7 @@ class _PlayerState extends State<Player> {
                             ),
                           ),
                           Text(
-                            'FGM:${calculateFGM()}/${calculateFGA()}',
+                            'FGM: ${calculateFGM()}/${calculateFGA()}',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w300,
